@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -38,53 +39,73 @@ public class ThemeServiceImpl implements ThemeService {
         return themeDao.findByName(themeName);
     }
 
-    // TODO: 测试这个函数
     @Override
     public void updateThemeStateByName(String themeName) {
 
+        // 判断theme是否为null
+        Objects.requireNonNull(themeName);
 
-        Optional<Theme> theme=themeDao.findByName(themeName);
-        if(!theme.isPresent()){
+        // 判断theme的长度是否在1~30之间
+        if (themeName.length() < 1 || themeName.length() > 30) {
+            throw new IllegalArgumentException("themeName's length should be in [1,30]");
+        }
+
+        Optional<Theme> theme = themeDao.findByName(themeName);
+        if (!theme.isPresent()) {
             return;
         }
 
-        List<Post> postList=postDao.findByThemeName(themeName);
-        Integer postCount=postList.size();
-        Integer likesCount=0;
-        for (Post post:
-             postList) {
-            if(post.getUserLikedList()!=null){
-                likesCount+=post.getUserLikedList().size();
+        List<Post> postList = postDao.findByThemeName(themeName);
+        Integer postCount = postList.size();
+        Integer likesCount = 0;
+        for (Post post :
+                postList) {
+            if (post.getUserLikedList() != null) {
+                likesCount += post.getUserLikedList().size();
             }
         }
 
         Query query = new Query(Criteria.where("themeName").is(themeName));
         Update update = new Update();
-        update.set("postsCount",postCount);
-        update.set("likesCount",likesCount);
-        mongoTemplate.updateFirst(query,update,Theme.class);
-
-
+        update.set("postsCount", postCount);
+        update.set("likesCount", likesCount);
+        mongoTemplate.updateFirst(query, update, Theme.class);
     }
 
     // TODO: 测试这个函数
     @Override
     public Optional<Theme> addTheme(String themeName, String themePicture) {
 
+        // 判断theme是否为null
+        Objects.requireNonNull(themeName);
+
+        // 判断theme的长度是否在1~30之间
+        if (themeName.length() < 1 || themeName.length() > 30) {
+            throw new IllegalArgumentException("themeName's length should be in [1,30]");
+        }
+
+        // 检查themePicture是否为null
+        Objects.requireNonNull(themePicture);
+
+        // 检查themePicture的长度是否在1~2082之间
+        if (themePicture.length() < 1 || themePicture.length() > 2082) {
+            throw new IllegalArgumentException("themePicture's length should be in [1,2082]");
+        }
+
         //存在同名的就不添加了
-        Optional<Theme> themeRet=themeDao.findByName(themeName);
-        if(themeRet.isPresent()){
+        Optional<Theme> themeRet = themeDao.findByName(themeName);
+        if (themeRet.isPresent()) {
             return Optional.empty();
         }
 
-        Theme theme=new Theme();
+        Theme theme = new Theme();
         theme.setThemeName(themeName);
         theme.setThemePicture(themePicture);
         theme.setLikesCount(0);
         theme.setPostsCount(0);
         theme.setPostsIds(new ArrayList<>());
 
-        Theme result= themeDao.save(theme);
+        Theme result = themeDao.save(theme);
 
         return Optional.of(result);
     }
