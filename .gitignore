@@ -36,3 +36,5 @@ build/
 **/allure-results/
 **/allure-report/
 
+### allure docs ###
+docs/
