@@ -32,3 +32,15 @@ jobs:
 
     - name: Test with Maven
       run: mvn -B test --file pom.xml
+    
+    - name: Test circle module
+      run: mvn -B test --file circle/pom.xml
+
+    - name: Test health module
+      run: mvn -B test --file health/pom.xml
+
+    - name: Test schedule module
+      run: mvn -B test --file schedule/pom.xml
+
+    - name: Test UserService module
+      run: mvn -B test --file UserService/pom.xml
