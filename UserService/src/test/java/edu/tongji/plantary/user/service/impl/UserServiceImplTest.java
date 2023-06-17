@@ -103,7 +103,7 @@ class UserServiceImplTest {
     class LoginStubTest {
         @Test
         @Story("测试正确的电话和密码")
-        @DisplayName("1.1 Login Success Test")
+        @DisplayName("测试用例 - 1")
         void login_with_correct_phone_and_password() {
             Optional<User> user = userService.login("17830827328", "test");
             assertTrue(user.isPresent());
@@ -112,7 +112,7 @@ class UserServiceImplTest {
 
         @Test
         @Story("测试正确的电话和错误的密码")
-        @DisplayName("1.2 Login Fail Test")
+        @DisplayName("测试用例 - 2")
         void login_with_correct_phone_and_wrong_password() {
             Optional<User> user = userService.login("17830827328", "test1");
             assertFalse(user.isPresent());
@@ -120,7 +120,7 @@ class UserServiceImplTest {
 
         @Test
         @Story("测试错误的电话和正确的密码")
-        @DisplayName("1.3 Login Fail Test")
+        @DisplayName("测试用例 - 3")
         void login_with_wrong_phone_and_correct_password() {
             Optional<User> user = userService.login("17830827329", "test");
             assertFalse(user.isPresent());
@@ -128,7 +128,7 @@ class UserServiceImplTest {
 
         @Test
         @Story("测试错误的电话和密码")
-        @DisplayName("1.4 Login Fail Test")
+        @DisplayName("测试用例 - 4")
         void login_with_wrong_phone_and_wrong_password() {
             Optional<User> user = userService.login("17830827329", "test1");
             assertFalse(user.isPresent());
@@ -136,21 +136,21 @@ class UserServiceImplTest {
 
         @Test
         @Story("测试电话为空字符串")
-        @DisplayName("2.1 Login Fail Test")
+        @DisplayName("测试用例 - 5")
         void login_with_empty_phone() {
             assertThrows(IllegalArgumentException.class, () -> userService.login("", "test"));
         }
 
         @Test
         @Story("测试电话为null")
-        @DisplayName("2.2 Login Fail Test")
+        @DisplayName("测试用例 - 6")
         void login_with_null_phone() {
             assertThrows(NullPointerException.class, () -> userService.login(null, "test"));
         }
 
         @Test
         @Story("测试电话不符合正则表达式")
-        @DisplayName("2.3 Login Fail Test")
+        @DisplayName("测试用例 - 7")
         void login_with_wrong_pattern_phone() {
             assertThrows(IllegalArgumentException.class, () -> userService.login("1783082732a", "test"));
             assertThrows(IllegalArgumentException.class, () -> userService.login("178308273281", "test"));
@@ -159,28 +159,28 @@ class UserServiceImplTest {
 
         @Test
         @Story("测试密码为空字符串")
-        @DisplayName("3.1 Login Fail Test")
+        @DisplayName("测试用例 - 8")
         void login_with_empty_password() {
             assertThrows(IllegalArgumentException.class, () -> userService.login("17830827328", ""));
         }
 
         @Test
         @Story("测试密码为null")
-        @DisplayName("3.2 Login Fail Test")
+        @DisplayName("测试用例 - 9")
         void login_with_null_password() {
             assertThrows(NullPointerException.class, () -> userService.login("17830827328", null));
         }
 
         @Test
         @Story("测试密码长度小于4")
-        @DisplayName("3.3 Login Fail Test")
+        @DisplayName("测试用例 - 10")
         void login_with_password_length_less_than_4() {
             assertThrows(IllegalArgumentException.class, () -> userService.login("17830827328", "tes"));
         }
 
         @Test
         @Story("测试密码长度大于50")
-        @DisplayName("3.4 Login Fail Test")
+        @DisplayName("测试用例 - 11")
         void login_with_password_length_more_than_50() {
             assertThrows(IllegalArgumentException.class, () -> userService.login("17830827328",
                     Collections.nCopies(51, "a").stream().reduce("", String::concat)));
