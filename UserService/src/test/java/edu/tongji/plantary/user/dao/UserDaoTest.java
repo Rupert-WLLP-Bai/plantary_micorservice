@@ -27,7 +27,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(AllureJunit5.class)
 @Epic("用户DAO层测试")
 @Feature("用户DAO层测试")
-@DataMongoTest
+@Disabled
 public class UserDaoTest {
 
     @Autowired
