@@ -5,6 +5,7 @@ import edu.tongji.plantary.circle.entity.Comment;
 import edu.tongji.plantary.circle.entity.Post;
 import edu.tongji.plantary.circle.entity.UserItem;
 import edu.tongji.plantary.circle.service.PostService;
+import edu.tongji.plantary.circle.service.PostValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
@@ -27,8 +28,17 @@ public class PostServiceImpl implements PostService {
         return posts;
     }
 
+
+    @Override
+    public Optional<Post> deletePost(String postID) {
+        return Optional.empty();
+    }
+
+    // TODO: 测试这个函数
     @Override
     public Optional<Post> addPost(Post post) {
+        // 加入参数检查 使用PostValidator
+        PostValidator.validatePost(post);
 
         Post ret=mongoTemplate.insert(post);
 
@@ -36,10 +46,6 @@ public class PostServiceImpl implements PostService {
         else return Optional.of(ret);
     }
 
-    @Override
-    public Optional<Post> deletePost(String postID) {
-        return Optional.empty();
-    }
 
     // TODO: 测试这个函数
     @Override
@@ -80,7 +86,6 @@ public class PostServiceImpl implements PostService {
         return postDao.findByPosterPhone(posterPhone);
     }
 
-    // TODO: 测试这个函数
     @Override
     public Optional<Post> putPost(String postContent, String postPicture, UserItem userItem) {
 
@@ -101,7 +106,6 @@ public class PostServiceImpl implements PostService {
 
     }
 
-    // TODO: 测试这个函数
     @Override
     public Optional<Post> putPostByThemeName(String ThemeName, String postContent, String postPicture, UserItem userItem) {
         Post post=new Post();
@@ -121,7 +125,6 @@ public class PostServiceImpl implements PostService {
         }
     }
 
-    // TODO: 测试这个函数
     @Override
     public Optional<Post> putPostByPictures(String postContent, List<String> postPictures, UserItem userItem) {
 
