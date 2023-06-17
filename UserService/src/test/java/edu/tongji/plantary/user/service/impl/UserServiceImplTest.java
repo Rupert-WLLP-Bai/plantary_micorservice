@@ -190,7 +190,7 @@ class UserServiceImplTest {
 
     @Nested
     @DisplayName("Register Stub Test")
-    @Story("使用状态迁移树的方法，测试UserService的register方法")
+    @Story("使用白盒测试的方法，测试UserService的register方法")
     class RegisterStubTest {
         @Test
         @DisplayName("测试用例1 - sex为null")
@@ -399,7 +399,7 @@ class UserServiceImplTest {
     }
 
     @Nested
-    @DisplayName("ModifyUserInfo测试")
+    @DisplayName("ModifyUserInfo Stub Test")
     @Story("使用正交表法对ModifyUserInfo方法进行测试")
     class ModifyUserInfoStubTest {
 

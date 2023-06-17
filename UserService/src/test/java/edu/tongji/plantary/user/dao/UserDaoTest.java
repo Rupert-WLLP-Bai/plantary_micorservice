@@ -27,6 +27,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(AllureJunit5.class)
 @Epic("用户DAO层测试")
 @Feature("用户DAO层测试")
+@DataMongoTest
 @Disabled
 public class UserDaoTest {
 
@@ -41,37 +42,6 @@ public class UserDaoTest {
         int a = 1;
         int b = 2;
         assertEquals(3, a+b);
-    }
-
-    @Test
-    @DisplayName("Sample Fail Test")
-    @Description("Test the sampleFail method in UserDao")
-    @Story("Sample Fail")
-    void failSample(){
-        int a = 1;
-        int b = 2;
-        assertEquals(4, a+b);
-    }
-
-    @Test
-    @Disabled
-    @DisplayName("Sample Skip Test")
-    @Description("Test the sampleSkip method in UserDao")
-    @Story("Sample Skip")
-    void skipSample(){
-        int a = 1;
-        int b = 2;
-        assertEquals(3, a+b);
-    }
-
-    @Test
-    @DisplayName("Sample Exception Test")
-    @Description("Test the sampleException method in UserDao")
-    @Story("Sample Exception")
-    void exceptionSample(){
-        int a = 1;
-        int b = 0;
-        assertEquals(3, a/b);
     }
 
     @Test
