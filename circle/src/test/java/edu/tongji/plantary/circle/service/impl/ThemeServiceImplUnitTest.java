@@ -1,5 +1,6 @@
 package edu.tongji.plantary.circle.service.impl;
 
+import com.mongodb.MongoException;
 import edu.tongji.plantary.circle.dao.PostDao;
 import edu.tongji.plantary.circle.dao.ThemeDao;
 import edu.tongji.plantary.circle.entity.Theme;
@@ -42,83 +43,72 @@ class ThemeServiceImplUnitTest {
         MockitoAnnotations.openMocks(this); // 初始化 Mockito
         // 模拟 ThemeDao 的 findByName 函数, 返回一个 Theme 对象
         Theme theme = new Theme();
-        theme.setThemeName("test");
-        theme.setThemePicture("test");
+        theme.setThemeName("健身圈");
+        theme.setThemePicture("test_picture_url");
         theme.setPostsCount(1);
         theme.setLikesCount(1);
-        theme.setPostsIds(new ArrayList<String>(){{
+        theme.setPostsIds(new ArrayList<String>() {{
             add("post_id");
         }});
-        when(themeDao.findByName("test")).thenReturn(Optional.of(theme));
+        when(themeDao.findByName("健身圈")).thenReturn(Optional.of(theme));
 
 
         // 模拟 PostDao 的 findByThemeName 函数, 返回一个 Post 对象
-        when(postDao.findByThemeName("test")).thenReturn(new ArrayList<>());
+        when(postDao.findByThemeName("健身圈")).thenReturn(new ArrayList<>());
 
         // 模拟 MongoTemplate 的 updateFirst 函数, 不做任何操作
         when(mongoTemplate.updateFirst((Query) any(), (UpdateDefinition) any(), (Class<?>) any())).thenReturn(null);
     }
 
-    // 使用边界值进行测试, 设计输入长度为0、1、2、16、29、30、31的字符串, 以及null
     @Nested
     @DisplayName("测试 updateThemeStateByName 函数")
     class TestUpdateThemeStateByName {
         @Test
-        @Story("测试输入长度为0的字符串")
-        @DisplayName("测试输入长度为0的字符串")
-        void testUpdateThemeStateByNameWithEmptyString() {
+        @Story("测试输入的themeName存在")
+        @DisplayName("测试用例 - 1 输入的themeName存在")
+        void testUpdateThemeStateByNameWithExist() {
+            // 只要不抛出异常, 就算测试通过
+            themeService.updateThemeStateByName("健身圈");
+        }
+
+        @Test
+        @Story("测试输入的themeName为空字符串")
+        @DisplayName("测试用例 - 2 输入的themeName为空字符串")
+        void testUpdateThemeStateByNameWithEmpty() {
             assertThrows(IllegalArgumentException.class, () -> themeService.updateThemeStateByName(""));
         }
 
         @Test
-        @Story("测试输入长度为1的字符串")
-        @DisplayName("测试输入长度为1的字符串")
-        void testUpdateThemeStateByNameWithOneCharString() {
-            assertDoesNotThrow(() -> themeService.updateThemeStateByName("a"));
+        @Story("测试输入的themeName长度超出30位的上限")
+        @DisplayName("测试用例 - 3 输入的themeName长度超出30位的上限")
+        void testUpdateThemeStateByNameWithLong() {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < 31; i++) {
+                sb.append("a");
+            }
+            assertThrows(IllegalArgumentException.class, () -> themeService.updateThemeStateByName(sb.toString()));
         }
 
         @Test
-        @Story("测试输入长度为2的字符串")
-        @DisplayName("测试输入长度为2的字符串")
-        void testUpdateThemeStateByNameWithTwoCharString() {
-            assertDoesNotThrow(() -> themeService.updateThemeStateByName("ab"));
+        @Story("测试输入的主题不存在")
+        @DisplayName("测试用例 - 4 输入的主题不存在")
+        void testUpdateThemeStateByNameWithNotExist() {
+            assertThrows(MongoException.class, () -> themeService.updateThemeStateByName("不存在的主题"));
         }
 
-        @Test
-        @Story("测试输入长度为16的字符串")
-        @DisplayName("测试输入长度为16的字符串")
-        void testUpdateThemeStateByNameWithSixteenCharString() {
-            assertDoesNotThrow(() -> themeService.updateThemeStateByName("abcdefghijklmnop"));
-        }
 
-        @Test
-        @Story("测试输入长度为29的字符串")
-        @DisplayName("测试输入长度为29的字符串")
-        void testUpdateThemeStateByNameWithTwentyNineCharString() {
-            assertDoesNotThrow(() -> themeService.updateThemeStateByName("abcdefghijklmnopqrstuvwxyz012"));
-        }
-
-        @Test
-        @Story("测试输入长度为30的字符串")
-        @DisplayName("测试输入长度为30的字符串")
-        void testUpdateThemeStateByNameWithThirtyCharString() {
-            assertDoesNotThrow(() -> themeService.updateThemeStateByName("abcdefghijklmnopqrstuvwxyz0123"));
-        }
-
-        @Test
-        @Story("测试输入长度为31的字符串")
-        @DisplayName("测试输入长度为31的字符串")
-        void testUpdateThemeStateByNameWithThirtyOneCharString() {
-            assertThrows(IllegalArgumentException.class, () -> themeService.updateThemeStateByName("abcdefghijklmnopqrstuvwxyz01234"));
-        }
 
         @Test
         @Story("测试输入为null")
-        @DisplayName("测试输入为null")
+        @DisplayName("测试用例 - 5 输入为null")
         void testUpdateThemeStateByNameWithNull() {
             assertThrows(NullPointerException.class, () -> themeService.updateThemeStateByName(null));
         }
     }
 
-    //
+    @Nested
+    @DisplayName("测试 addTheme 函数")
+    class TestAddTheme{
+
+    }
 }

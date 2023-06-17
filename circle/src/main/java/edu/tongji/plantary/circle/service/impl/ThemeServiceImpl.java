@@ -1,5 +1,6 @@
 package edu.tongji.plantary.circle.service.impl;
 
+import com.mongodb.MongoException;
 import edu.tongji.plantary.circle.dao.PostDao;
 import edu.tongji.plantary.circle.dao.ThemeDao;
 import edu.tongji.plantary.circle.entity.Post;
@@ -52,7 +53,9 @@ public class ThemeServiceImpl implements ThemeService {
 
         Optional<Theme> theme = themeDao.findByName(themeName);
         if (!theme.isPresent()) {
-            return;
+            // return;
+            // FIXME: 改为抛出异常, 以便于测试
+            throw new MongoException("theme not found");
         }
 
         List<Post> postList = postDao.findByThemeName(themeName);
