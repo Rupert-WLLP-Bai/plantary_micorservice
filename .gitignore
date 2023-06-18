@@ -38,3 +38,6 @@ build/
 
 ### allure docs ###
 docs/
+
+### but can upload these files ###
+!UnitTestReport/**/allure-report/
