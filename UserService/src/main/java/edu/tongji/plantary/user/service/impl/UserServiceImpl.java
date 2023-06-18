@@ -1,9 +1,10 @@
 package edu.tongji.plantary.user.service.impl;
 
+import com.mongodb.client.result.DeleteResult;
 import edu.tongji.plantary.user.dao.UserDao;
 import edu.tongji.plantary.user.entity.User;
 import edu.tongji.plantary.user.service.UserService;
-import edu.tongji.plantary.user.service.UserValidator;
+import edu.tongji.plantary.user.util.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -69,8 +70,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> getUserInfoByPhone(String phone) {
-        Optional<User> user= userDao.findByPhone(phone);
-        return user;
+        // 参数校验
+        UserValidator.validatePhone(phone);
+        return userDao.findByPhone(phone);
     }
 
     @Override
@@ -152,5 +154,28 @@ public class UserServiceImpl implements UserService {
         mongoTemplate.updateFirst(query, update, User.class);
 
         return Optional.of(user);
+    }
+
+    @Override
+    public DeleteResult deleteUserByPhone(String phone) {
+        // 参数校验
+        UserValidator.validatePhone(phone);
+
+        // 查询数据库中是否存在该用户
+        Optional<User> existingUser = userDao.findByPhone(phone);
+        if (!existingUser.isPresent()) {
+            return null;
+        }
+
+        // 构建查询条件
+        Query query = new Query(Criteria.where("phone").is(phone));
+
+        // 执行删除操作
+        try {
+            return mongoTemplate.remove(query, User.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

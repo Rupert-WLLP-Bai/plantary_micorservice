@@ -1,6 +1,7 @@
 package edu.tongji.plantary.user.service;
 
 
+import com.mongodb.client.result.DeleteResult;
 import edu.tongji.plantary.user.entity.User;
 
 import java.util.List;
@@ -16,5 +17,7 @@ public interface UserService {
     List<User> getUserInfos();
 
     Optional<User> modifyUserInfo(User user);
+
+    DeleteResult deleteUserByPhone(String phone);
 
 }

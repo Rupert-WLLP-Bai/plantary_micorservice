@@ -1,4 +1,4 @@
-package edu.tongji.plantary.user.service;
+package edu.tongji.plantary.user.util;
 
 import java.util.Arrays;
 import java.util.List;

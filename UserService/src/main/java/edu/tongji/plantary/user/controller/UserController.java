@@ -23,11 +23,11 @@ public class UserController {
     @GetMapping("/userinfo/{phone}")
     @ResponseBody
     public User getUserInfoByPhone(@PathVariable String phone) {
-
-        Optional<User> user = userService.getUserInfoByPhone(phone);
-        if (user.isPresent()) {
-            return user.get();
-        } else {
+        try {
+            Optional<User> user = userService.getUserInfoByPhone(phone);
+            return user.orElse(null);
+        } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -36,7 +36,6 @@ public class UserController {
     @GetMapping("/userinfos")
     @ResponseBody
     public List<User> getUserInfos() {
-
         List<User> user = userService.getUserInfos();
         if (user.size() != 0) {
             return user;
@@ -49,19 +48,23 @@ public class UserController {
     @PostMapping("/userinfo/{phone}")
     @ResponseBody
     public User modifyUserInfo(User user) {
-
-        Optional<User> user1 = userService.getUserInfoByPhone(user.getPhone());
-        if (!user1.isPresent()) {
-            return null;
-        }
-        //如果用户存在，执行下列命令
-        Optional<User> newUser = userService.modifyUserInfo(user);
-        if (newUser.isPresent()) {
-            return user;
-        } else {
+        try {
+            Optional<User> user1 = userService.getUserInfoByPhone(user.getPhone());
+            if (!user1.isPresent()) {
+                return null;
+            }
+            // 如果用户存在，执行下列命令
+            Optional<User> newUser = userService.modifyUserInfo(user);
+            if (newUser.isPresent()) {
+                return user;
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            // 异常处理逻辑
+            // 返回适当的错误响应给前端或执行其他操作
+            e.printStackTrace();
             return null;
         }
     }
-
-
 }
