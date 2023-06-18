@@ -43,7 +43,7 @@ public class PostValidator {
         if (picture.isEmpty()) {
             throw new IllegalArgumentException("Picture cannot be empty.");
         }
-        if (picture.length() >= 2083) {
+        if (picture.length() > 2083) {
             throw new IllegalArgumentException("Picture length must be less than 2083.");
         }
     }
@@ -57,8 +57,8 @@ public class PostValidator {
 
     public static void validateContent(String content) {
         Objects.requireNonNull(content, "Content cannot be null.");
-        if (content.length() < 0 || content.length() > 1023) {
-            throw new IllegalArgumentException("Content length must be between 0 and 1023.");
+        if (content.length() < 1 || content.length() > 1023) {
+            throw new IllegalArgumentException("Content length must be between 1 and 1023.");
         }
     }
 

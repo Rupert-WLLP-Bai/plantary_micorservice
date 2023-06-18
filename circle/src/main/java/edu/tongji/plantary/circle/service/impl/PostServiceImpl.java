@@ -24,7 +24,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Post> getAllPosts() {
-        List<Post> posts= postDao.findAll();
+        List<Post> posts = postDao.findAll();
         return posts;
     }
 
@@ -34,15 +34,14 @@ public class PostServiceImpl implements PostService {
         return Optional.empty();
     }
 
-    // TODO: 测试这个函数
     @Override
     public Optional<Post> addPost(Post post) {
         // 加入参数检查 使用PostValidator
         PostValidator.validatePost(post);
 
-        Post ret=mongoTemplate.insert(post);
+        Post ret = mongoTemplate.insert(post);
 
-        if(ret==null)return Optional.empty();
+        if (ret == null) return Optional.empty();
         else return Optional.of(ret);
     }
 
@@ -50,14 +49,30 @@ public class PostServiceImpl implements PostService {
     // TODO: 测试这个函数
     @Override
     public Optional<Comment> addComment(String postID, Comment comment) {
+        // 加入参数检查 首先检查postID和comment是否存在
+        Objects.requireNonNull(postID);
+        Objects.requireNonNull(comment);
 
-        Optional<Post> post= postDao.findById(postID);
-        if(post.isPresent()){
+        // 检查comment
+        PostValidator.validateContent(comment.getContent());
+        PostValidator.validateReleaseTime(comment.getReleaseTime());
+        PostValidator.validatePoster(comment.getUserItem());
 
-            Post post1=post.get();
-
-            if(post1.getUserCommentList()==null){
+        Optional<Post> post = postDao.findById(postID);
+        if (post.isPresent()) {
+            Post post1 = post.get();
+            if (post1.getUserCommentList() == null) {
                 post1.setUserCommentList(new ArrayList<>());
+            }
+            // 检查name和phone是否匹配, 不一致则抛出IllegalArgumentException
+            if (!post1.getPoster().getName().equals(comment.getUserItem().getName()) ||
+                    !post1.getPoster().getPhone().equals(comment.getUserItem().getPhone())) {
+                throw new IllegalArgumentException("Comment's poster's name or phone is not match post's poster's name or phone");
+            }
+
+            // 检查picture和phone是否匹配, 不一致则抛出IllegalArgumentException
+            if (!post1.getPoster().getPicture().equals(comment.getUserItem().getPicture())) {
+                throw new IllegalArgumentException("Comment's poster's picture is not match post's poster's picture");
             }
 
 
@@ -65,18 +80,18 @@ public class PostServiceImpl implements PostService {
             postDao.save(post1);
 
             return Optional.of(comment);
-        }else{
+        } else {
             return Optional.empty();
         }
     }
 
     @Override
     public List<Comment> getCommentByPostID(String postID) {
-        Optional<Post> post=postDao.findById(postID);
-        List<Comment> comments=new ArrayList<>();
-        if(post.isPresent()){
+        Optional<Post> post = postDao.findById(postID);
+        List<Comment> comments = new ArrayList<>();
+        if (post.isPresent()) {
             return post.get().getUserCommentList();
-        }else{
+        } else {
             return comments;
         }
     }
@@ -89,18 +104,18 @@ public class PostServiceImpl implements PostService {
     @Override
     public Optional<Post> putPost(String postContent, String postPicture, UserItem userItem) {
 
-        Post post=new Post();
+        Post post = new Post();
         post.setContent(postContent);
         post.setPics(Arrays.asList(postPicture));
         post.setPoster(userItem);
         Date date = new Date();
-        SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         post.setReleaseTime(dateFormat.format(date));
-        Post ret=mongoTemplate.insert(post);
+        Post ret = mongoTemplate.insert(post);
 
-        if(ret==null){
+        if (ret == null) {
             return Optional.empty();
-        }else{
+        } else {
             return Optional.of(ret);
         }
 
@@ -108,19 +123,19 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Optional<Post> putPostByThemeName(String ThemeName, String postContent, String postPicture, UserItem userItem) {
-        Post post=new Post();
+        Post post = new Post();
         post.setContent(postContent);
         post.setPics(Arrays.asList(postPicture));
         post.setPoster(userItem);
         post.setThemeName(ThemeName);
         Date date = new Date();
-        SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         post.setReleaseTime(dateFormat.format(date));
-        Post ret=mongoTemplate.insert(post);
+        Post ret = mongoTemplate.insert(post);
 
-        if(ret==null){
+        if (ret == null) {
             return Optional.empty();
-        }else{
+        } else {
             return Optional.of(ret);
         }
     }
@@ -128,18 +143,18 @@ public class PostServiceImpl implements PostService {
     @Override
     public Optional<Post> putPostByPictures(String postContent, List<String> postPictures, UserItem userItem) {
 
-        Post post=new Post();
+        Post post = new Post();
         post.setContent(postContent);
         post.setPics(postPictures);
         post.setPoster(userItem);
         Date date = new Date();
-        SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         post.setReleaseTime(dateFormat.format(date));
-        Post ret=mongoTemplate.insert(post);
+        Post ret = mongoTemplate.insert(post);
 
-        if(ret==null){
+        if (ret == null) {
             return Optional.empty();
-        }else{
+        } else {
             return Optional.of(ret);
         }
 

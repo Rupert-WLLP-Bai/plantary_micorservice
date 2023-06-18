@@ -54,7 +54,7 @@ public class ThemeServiceImpl implements ThemeService {
         Optional<Theme> theme = themeDao.findByName(themeName);
         if (!theme.isPresent()) {
             // return;
-            // FIXME: 改为抛出异常, 以便于测试
+            // FIX: 改为抛出异常, 以便于测试
             throw new MongoException("theme not found");
         }
 
@@ -75,7 +75,6 @@ public class ThemeServiceImpl implements ThemeService {
         mongoTemplate.updateFirst(query, update, Theme.class);
     }
 
-    // TODO: 测试这个函数
     @Override
     public Optional<Theme> addTheme(String themeName, String themePicture) {
 

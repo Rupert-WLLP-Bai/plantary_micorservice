@@ -69,7 +69,7 @@ class ThemeServiceImplUnitTest {
         @Test
         @Story("测试输入的themeName存在")
         @DisplayName("测试用例 - 001 输入的themeName存在")
-        void testUpdateThemeStateByNameWithExist() {
+        void test_001_UpdateThemeStateByNameWithExist() {
             // 只要不抛出异常, 就算测试通过
             themeService.updateThemeStateByName("健身圈");
         }
@@ -77,14 +77,14 @@ class ThemeServiceImplUnitTest {
         @Test
         @Story("测试输入的themeName为空字符串")
         @DisplayName("测试用例 - 002 输入的themeName为空字符串")
-        void testUpdateThemeStateByNameWithEmpty() {
+        void test_002_UpdateThemeStateByNameWithEmpty() {
             assertThrows(IllegalArgumentException.class, () -> themeService.updateThemeStateByName(""));
         }
 
         @Test
         @Story("测试输入的themeName长度超出30位的上限")
         @DisplayName("测试用例 - 003 输入的themeName长度超出30位的上限")
-        void testUpdateThemeStateByNameWithLong() {
+        void test_003_UpdateThemeStateByNameWithLong() {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < 31; i++) {
                 sb.append("a");
@@ -95,7 +95,7 @@ class ThemeServiceImplUnitTest {
         @Test
         @Story("测试输入的主题不存在")
         @DisplayName("测试用例 - 004 输入的主题不存在")
-        void testUpdateThemeStateByNameWithNotExist() {
+        void test_004_UpdateThemeStateByNameWithNotExist() {
             assertThrows(MongoException.class, () -> themeService.updateThemeStateByName("不存在的主题"));
         }
 
@@ -104,7 +104,7 @@ class ThemeServiceImplUnitTest {
         @Test
         @Story("测试输入为null")
         @DisplayName("测试用例 - 005 输入为null")
-        void testUpdateThemeStateByNameWithNull() {
+        void test_005_UpdateThemeStateByNameWithNull() {
             assertThrows(NullPointerException.class, () -> themeService.updateThemeStateByName(null));
         }
     }
