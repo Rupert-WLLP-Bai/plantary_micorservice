@@ -6,6 +6,7 @@ import edu.tongji.plantary.circle.entity.Post;
 import edu.tongji.plantary.circle.entity.UserItem;
 import edu.tongji.plantary.circle.service.PostService;
 import edu.tongji.plantary.circle.service.PostValidator;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,8 @@ public class PostServiceImpl implements PostService {
 
     @Autowired
     private PostDao postDao;
+
+    private static final Logger logger = org.slf4j.LoggerFactory.getLogger(PostServiceImpl.class);
 
     @Override
     public List<Post> getAllPosts() {
@@ -87,12 +90,19 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Comment> getCommentByPostID(String postID) {
-        Optional<Post> post = postDao.findById(postID);
-        List<Comment> comments = new ArrayList<>();
-        if (post.isPresent()) {
-            return post.get().getUserCommentList();
-        } else {
-            return comments;
+        // logger.info("[Service] getCommentByPostID: " + postID);
+        try {
+            Optional<Post> post = postDao.findById(postID);
+            List<Comment> comments = new ArrayList<>();
+            if (post.isPresent()) {
+                // logger.info("post is present");
+                return post.get().getUserCommentList();
+            } else {
+                return comments;
+            }
+        } catch (Exception e) {
+            logger.info("getCommentByPostID: " + e.getMessage());
+            return new ArrayList<>();
         }
     }
 

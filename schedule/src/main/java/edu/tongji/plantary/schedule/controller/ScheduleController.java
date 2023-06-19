@@ -59,6 +59,14 @@ public class ScheduleController {
         }
     }
 
+    // 加入一个函数, 处理DELETE /task/{_id}的传入null和空值的情况
+    @ApiOperation(value = "删除task, 传入null或空值时返回false")
+    @DeleteMapping("/task")
+    @ResponseBody
+    public boolean deleteTaskWithNullOrEmpty() {
+        return false;
+    }
+
     @ApiOperation(value = "删除task")
     @DeleteMapping("/task/{_id}")
     @ResponseBody

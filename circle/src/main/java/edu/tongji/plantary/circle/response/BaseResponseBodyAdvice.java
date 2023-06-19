@@ -34,7 +34,13 @@ public class BaseResponseBodyAdvice implements ResponseBodyAdvice<Object> {
 
         // 这里需要过滤掉swagger的相关返回
 
-        if (body instanceof BaseResponse || body instanceof Json || body instanceof UiConfiguration || (body instanceof ArrayList && ((ArrayList) body).get(0) instanceof SwaggerResource)) {
+        // 如果body是空Arraylist, 则返回空的BaseResponse
+        if (body instanceof ArrayList && ((ArrayList<?>) body).size() == 0) {
+            System.out.println("响应拦截成功");
+            return BaseResponse.ok();
+        }
+
+        if (body instanceof BaseResponse || body instanceof Json || body instanceof UiConfiguration || (body instanceof ArrayList && ((ArrayList<?>) body).get(0) instanceof SwaggerResource)) {
             return body;
         } else if (body == null) {
             System.out.println("响应拦截成功");

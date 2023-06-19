@@ -28,7 +28,7 @@ public class LoginController {
         } catch (Exception e) {
             // 异常处理逻辑
             // 返回适当的错误响应给前端或执行其他操作
-            e.printStackTrace();
+            // e.printStackTrace();
             return null;
         }
     }
@@ -43,7 +43,7 @@ public class LoginController {
         } catch (Exception e) {
             // 异常处理逻辑
             // 返回适当的错误响应给前端或执行其他操作
-            e.printStackTrace();
+            // e.printStackTrace();
             return null;
         }
     }
