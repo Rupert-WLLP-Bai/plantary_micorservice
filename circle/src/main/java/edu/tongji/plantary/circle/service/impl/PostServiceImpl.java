@@ -135,7 +135,7 @@ public class PostServiceImpl implements PostService {
     public Optional<Post> putPostByThemeName(String ThemeName, String postContent, String postPicture, UserItem userItem) {
         Post post = new Post();
         post.setContent(postContent);
-        post.setPics(Arrays.asList(postPicture));
+        post.setPics(Collections.singletonList(postPicture));
         post.setPoster(userItem);
         post.setThemeName(ThemeName);
         Date date = new Date();
@@ -172,6 +172,8 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Post> getPostsByThemeName(String themeName) {
+        // 检查themeName的合法性
+        PostValidator.validateThemeName(themeName);
         return postDao.findByThemeName(themeName);
     }
 

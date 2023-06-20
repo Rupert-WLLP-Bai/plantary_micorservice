@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.spring.web.json.Json;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,6 +20,8 @@ public class ScheduleController {
 
     @Autowired
     TaskService taskService;
+
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(ScheduleController.class);
 
     @ApiOperation(value = "获取所有事件")
     @GetMapping("/tasks")
@@ -63,8 +66,9 @@ public class ScheduleController {
     @ApiOperation(value = "删除task, 传入null或空值时返回false")
     @DeleteMapping("/task")
     @ResponseBody
-    public boolean deleteTaskWithNullOrEmpty() {
-        return false;
+    public Task deleteTaskWithNullOrEmpty() {
+        logger.warn("[DELETE /task] 传入null或空值");
+        return null;
     }
 
     @ApiOperation(value = "删除task")

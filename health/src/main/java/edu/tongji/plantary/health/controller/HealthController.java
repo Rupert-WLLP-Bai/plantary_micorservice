@@ -55,8 +55,13 @@ public class HealthController {
     @PutMapping("/HealthInfo")
     @ResponseBody
     HealthInfo uploadHealthInfo(String phone, String date, String exerciseIntensity, Double foodHeat, Integer exerciseDuration) {
-        Optional<HealthInfo> healthInfo = healthService.uploadDailyInfo(phone, date, exerciseIntensity, foodHeat, exerciseDuration);
-        return healthInfo.orElse(null);
+        try {
+            Optional<HealthInfo> healthInfo = healthService.uploadDailyInfo(phone, date, exerciseIntensity, foodHeat, exerciseDuration);
+            return healthInfo.orElse(null);
+        } catch (Exception e) {
+            // e.printStackTrace();
+            return null;
+        }
     }
 
 }

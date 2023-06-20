@@ -74,10 +74,12 @@ public class UserController {
         try {
             Optional<User> user1 = userService.getUserInfoByPhone(user.getPhone());
             if (!user1.isPresent()) {
+                logger.info("[POST] /userinfo/{phone} 传入参数: " + user.toString() + " 用户不存在");
                 return null;
             }
             // 如果用户存在，执行下列命令
             Optional<User> newUser = userService.modifyUserInfo(user);
+            logger.info("[POST] /userinfo/{phone} 新用户信息: " + newUser.toString());
             if (newUser.isPresent()) {
                 return user;
             } else {
@@ -87,6 +89,7 @@ public class UserController {
             // 异常处理逻辑
             // 返回适当的错误响应给前端或执行其他操作
             // e.printStackTrace();
+            e.printStackTrace();
             return null;
         }
     }

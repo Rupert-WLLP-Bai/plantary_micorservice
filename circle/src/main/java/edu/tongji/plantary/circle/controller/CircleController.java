@@ -1,6 +1,5 @@
 package edu.tongji.plantary.circle.controller;
 
-import edu.tongji.plantary.circle.dao.ThemeDao;
 import edu.tongji.plantary.circle.entity.Comment;
 import edu.tongji.plantary.circle.entity.Post;
 import edu.tongji.plantary.circle.entity.Theme;
@@ -44,7 +43,11 @@ public class CircleController {
     @GetMapping("/postByThemeName")
     @ResponseBody
     public List<Post> getPostsByThemeName(String themeName) {
-        return postService.getPostsByThemeName(themeName);
+        try {
+            return postService.getPostsByThemeName(themeName);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
 
@@ -73,11 +76,8 @@ public class CircleController {
     @ApiOperation(value = "用电话获取该博主所有帖子, 电话为空时返回null")
     @GetMapping("/post")
     @ResponseBody
-    public List<Post> getPostByPosterPhoneWithEmptyOrNullPhone(String posterPhone) {
-        if (posterPhone == null || posterPhone.equals("")) {
-            return null;
-        }
-        return postService.getPostByPosterPhone(posterPhone);
+    public List<Post> getPostByPosterPhoneWithEmptyOrNullPhone() {
+        return null;
     }
 
     @ApiOperation(value = "用电话获取该博主所有帖子")
@@ -113,11 +113,13 @@ public class CircleController {
     @ApiOperation(value = "发帖子")
     @PutMapping("/post")
     @ResponseBody
-    public Optional<Post> putPost(String postContent, String postPicture, UserItem userItem) {
+    public Post putPost(String postContent, String postPicture, UserItem userItem) {
         try {
-            return postService.putPost(postContent, postPicture, userItem);
+            // 检查isPresent()是否为true
+            Optional<Post> post = postService.putPost(postContent, postPicture, userItem);
+            return post.orElse(null);
         } catch (Exception e) {
-            return Optional.empty();
+            return null;
         }
     }
 
@@ -126,24 +128,7 @@ public class CircleController {
     @PutMapping("/post/comment")
     @ResponseBody
     public Comment addCommentWithEmptyOrNullPostID(String postID, UserItem userItem, String content) {
-        if (postID == null || postID.equals("")) {
-            return null;
-        }
-        //获取时间
-        Date date = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        //构造
-        Comment comment = new Comment();
-        comment.setReleaseTime(dateFormat.format(date));
-        comment.setUserItem(userItem);
-        comment.setContent(content);
-        //调用服务
-        try {
-            Optional<Comment> comment1 = postService.addComment(postID, comment);
-            return comment1.orElse(null);
-        } catch (Exception e) {
-            return null;
-        }
+        return null;
     }
 
     @ApiOperation(value = "在主题圈发帖子")
@@ -189,11 +174,15 @@ public class CircleController {
     @ApiOperation(value = "通过名字获取圈子, 名字为空时返回null")
     @GetMapping("/theme")
     @ResponseBody
-    public Optional<Theme> getThemeByNameWithEmptyOrNullName(String themeName) {
+    public Theme getThemeByNameWithEmptyOrNullName(String themeName) {
         if (themeName == null || themeName.equals("")) {
-            return Optional.empty();
+            return null;
         }
-        return themeService.findByName(themeName);
+        if (themeService.findByName(themeName).isPresent()) {
+            return themeService.findByName(themeName).get();
+        } else {
+            return null;
+        }
     }
 
 
@@ -201,7 +190,12 @@ public class CircleController {
     @PostMapping("/theme/{themeName}")
     @ResponseBody
     public void updateThemeStateByName(@PathVariable String themeName) {
-        themeService.updateThemeStateByName(themeName);
+        logger.info("[POST] /theme/" + themeName + " called");
+        try{
+            themeService.updateThemeStateByName(themeName);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // 加入一个接口, 处理themeName为null和空字符串的情况

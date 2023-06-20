@@ -33,18 +33,21 @@ public class HealthServiceImpl implements HealthService {
 
     @Override
     public Optional<HealthInfo> uploadDailyInfo(String phone, String date, String exerciseIntensity, Double foodHeat, Integer exerciseDuration) {
-
-        HealthInfo healthInfo=new HealthInfo();
+        // 检查参数是否合法, 不合法则抛出异常
+        if (phone == null || date == null || exerciseIntensity == null || foodHeat == null || exerciseDuration == null) {
+            throw new NullPointerException("参数不合法");
+        }
+        HealthInfo healthInfo = new HealthInfo();
         healthInfo.setDate(date);
         healthInfo.setFoodHeat(foodHeat);
         healthInfo.setExerciseDuration(exerciseDuration);
         healthInfo.setUserPhone(phone);
         healthInfo.setExerciseIntensity(exerciseIntensity);
 
-        HealthInfo ret =healthDao.insert(healthInfo);   // TODO: 注意一下这个返回值是什么, 会不会抛异常
-        if(ret==null){
+        HealthInfo ret = healthDao.insert(healthInfo);
+        if (ret == null) {
             return Optional.empty();
-        }else{
+        } else {
             return Optional.of(ret);
         }
 
